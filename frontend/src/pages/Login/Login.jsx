@@ -1,52 +1,57 @@
-// Login.js
+import axios from "axios";
+import React, { useState } from "react";
+// import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
-import React, { useState } from 'react';
 
-const Login = () => {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  });
+export default function Signin() {
+  // const dispatch=useDispatch();
+  const navigate = useNavigate();
+  const [user, setUser] = useState({ email: "", password: "" });
 
-  const handleChange = e => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
-  };
-
-  const handleSubmit = e => {
+  const handleEmail = (e) => {
+    setUser(
+      user ? { ...user, email: e.target.value } : { email: e.target.value, password: "" }
+    )
+  }
+  const handlePassword = (e) => {
+    setUser(
+      user ? { ...user, password: e.target.value } : { email: "", password: e.target.value }
+    )
+  }
+  const handleSubmit = (e) => {
     e.preventDefault();
-    // You can add your logic to handle form submission here
-    console.log(formData);
-    // Reset the form fields after submission (optional)
-    setFormData({
-      email: '',
-      password: ''
-    });
-  };
+    axios.post("http://localhost:3002/account/signin", user, { withCredentials: true }).then((result) => {
+      if (result.data.status === "error") {
+        alert("Enter correct data")
+      }
+      else {
+        // dispatch({type:"AUTH_ON"});
+        navigate("/");
+        window.location.reload();
+      }
+    }).catch(err => alert("error has been occured"))
+
+  }
 
   return (
     <div className="container">
-      <div className="row mt-5">
-        <div className="col-md-6 offset-md-3">
-          <h2 className="text-center mb-4">Login</h2>
-          <form onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label>Email</label>
-              <input type="email" className="form-control" name="email" value={formData.email} onChange={handleChange} required />
-            </div>
-            <div className="form-group">
-              <label>Password</label>
-              <input type="password" className="form-control" name="password" value={formData.password} onChange={handleChange} required />
-            </div>
-            <button type="submit" className="btn btn-primary btn-block">Login</button>
-          </form>
+      <form className="mt-5" onSubmit={handleSubmit}>
+        <h5 className="mb-4">Sign In</h5>
+        <div className="form-group">
+          <label htmlFor="email">Email</label>
+          <input type="email" className="form-control" id="email" onChange={handleEmail} />
         </div>
-      </div>
+        <div className="form-group">
+          <label htmlFor="password">Password</label>
+          <input type="password" className="form-control" id="password" onChange={handlePassword} />
+        </div>
+        <div className="form-group">
+          <button type="submit" className="btn btn-primary">Log in</button>
+        </div>
+      </form>
     </div>
-  );
-};
+  )
+}
 
-export default Login;
+

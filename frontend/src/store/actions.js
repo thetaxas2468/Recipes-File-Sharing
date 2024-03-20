@@ -1,7 +1,7 @@
 import { createAction } from "@reduxjs/toolkit";
 
-const recipeFormReset = createAction("recipeForm/reset");
-const UserFormReset = createAction("userForm/reset");
+const recipeReset = createAction("recipe/reset");
+const userReset = createAction("user/reset");
 
 
-export {recipeFormReset, UserFormReset};
+export {recipeReset, userReset};

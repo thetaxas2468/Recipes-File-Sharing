@@ -3,6 +3,7 @@ var cors = require("cors");
 const mongoose=require("mongoose")
 require('dotenv').config();
 const cookieParser = require("cookie-parser");
+const accounts = require("./Routes/userRoute");
 
 
 const app=express();
@@ -14,7 +15,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 
-
+app.use("/account",accounts)
 
 
 
@@ -25,7 +26,7 @@ app.use((req,res)=>{
 })
 
 mongoose
-  .connect(process.env.MONGO_URL, {dbName:process.env.DB_NAME ,useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(process.env.MONGO_URL, {dbName:process.env.DB_NAME  })
   .then(() => {
       
     console.log("connected to mongoDB!")

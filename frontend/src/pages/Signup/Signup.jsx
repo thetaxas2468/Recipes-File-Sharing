@@ -1,59 +1,57 @@
-// Signup.js
+import axios from "axios";
+import React, { useState } from "react";
+// import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
-import React, { useState } from 'react';
+export default function Signup() {
+  const navigate = useNavigate();
+  // const dispatch=useDispatch();
+  const [user, setUser] = useState({ email: "", password: "" });
 
-const Signup = () => {
-    // need to do the slice for signup and login as user forms
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    confirmPassword: ''
-  });
-
-  const handleChange = e => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
-  };
-
-  const handleSubmit = e => {
+  const handleEmail = (e) => {
+    setUser({
+      ...user, email: e.target.value
+    })
+  }
+  const handlePassword = (e) => {
+    setUser({
+      ...user, password: e.target.value
+    })
+  }
+  const handleSubmit = (e) => {
     e.preventDefault();
-    // You can add your logic to handle form submission here
-    console.log(formData);
-    // Reset the form fields after submission (optional)
-    setFormData({
-      email: '',
-      password: '',
-      confirmPassword: ''
-    });
-  };
+    if (user.password.length <= 6) {
+      alert("Weak password")
+      return;
+    }
+    axios.post("http://localhost:3002/account/signup", user, { withCredentials: true }).then((result) => {
+      // dispatch({type:"AUTH_ON"});
+      navigate("/");
+      window.location.reload();
+
+    }).catch(err => console.log("error"))
+
+  }
 
   return (
     <div className="container">
-      <div className="row mt-5">
-        <div className="col-md-6 offset-md-3">
-          <h2 className="text-center mb-4">Sign Up</h2>
-          <form onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label>Email</label>
-              <input type="email" className="form-control" name="email" value={formData.email} onChange={handleChange} required />
-            </div>
-            <div className="form-group">
-              <label>Password</label>
-              <input type="password" className="form-control" name="password" value={formData.password} onChange={handleChange} required />
-            </div>
-            <div className="form-group">
-              <label>Confirm Password</label>
-              <input type="password" className="form-control" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} required />
-            </div>
-            <button type="submit" className="btn btn-primary btn-block">Sign Up</button>
-          </form>
+      <form className="mt-5" onSubmit={handleSubmit}>
+        <h5 className="mb-4">Sign Up</h5>
+        <div className="form-group">
+          <label htmlFor="email">Email</label>
+          <input type="email" className="form-control" id="email" onChange={handleEmail} />
         </div>
-      </div>
+        <div className="form-group">
+          <label htmlFor="password">Password</label>
+          <input type="password" className="form-control" id="password" onChange={handlePassword} />
+        </div>
+        <div className="form-group">
+          <button type="submit" className="btn btn-primary">Sign Up</button>
+        </div>
+      </form>
     </div>
-  );
-};
 
-export default Signup;
+  )
+}
+
+
