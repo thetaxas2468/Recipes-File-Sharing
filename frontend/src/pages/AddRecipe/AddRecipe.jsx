@@ -1,10 +1,13 @@
 // AddRecipe.js
 
-import React, { useState } from 'react';
+import Cookies from 'js-cookie';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 
 const AddRecipe = () => {
     // need to do recipe form
+    const navigate = useNavigate();
     const [formData, setFormData] = useState(
         {
         title: '',
@@ -29,6 +32,13 @@ const AddRecipe = () => {
         // Redirect to the home page after adding the recipe (assuming successful submission)
         
     };
+
+    useEffect(()=>{
+        if(!Cookies.get("user")){
+          navigate("/");
+          window.location.reload();
+        }
+      },[]);
 
     return (
         <div className="container">

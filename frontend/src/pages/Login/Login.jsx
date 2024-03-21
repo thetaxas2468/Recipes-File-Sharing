@@ -1,13 +1,22 @@
 import axios from "axios";
-import React, { useState } from "react";
-// import { useDispatch } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { changeEmail } from "../../store";
+import Cookies from "js-cookie";
 
 
 export default function Signin() {
-  // const dispatch=useDispatch();
+  const dispatch=useDispatch();
   const navigate = useNavigate();
   const [user, setUser] = useState({ email: "", password: "" });
+
+  useEffect(()=>{
+    if(Cookies.get("user")){
+      navigate("/");
+      window.location.reload();
+    }
+  },[]);
 
   const handleEmail = (e) => {
     setUser(
@@ -23,10 +32,10 @@ export default function Signin() {
     e.preventDefault();
     axios.post("http://localhost:3002/account/signin", user, { withCredentials: true }).then((result) => {
       if (result.data.status === "error") {
-        alert("Enter correct data")
+        alert(result.data.statusMessage)
       }
       else {
-        // dispatch({type:"AUTH_ON"});
+        dispatch(changeEmail(user.email))
         navigate("/");
         window.location.reload();
       }

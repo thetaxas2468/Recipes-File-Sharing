@@ -4,6 +4,7 @@ const mongoose=require("mongoose")
 require('dotenv').config();
 const cookieParser = require("cookie-parser");
 const accounts = require("./Routes/userRoute");
+const { checkIfLoggedIn } = require("./Middlewares/Autherization");
 
 
 const app=express();

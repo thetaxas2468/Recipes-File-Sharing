@@ -1,9 +1,11 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import Cookies from 'js-cookie';
+import React, { useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 const BrowseRecipes = () => {
     // need to do recipes list as slice
   // Dummy data for recipes
+  const navigate = useNavigate();
   const recipes = [
     {
       id: 1,
@@ -19,6 +21,13 @@ const BrowseRecipes = () => {
     },
     // Add more recipes as needed
   ];
+
+  useEffect(()=>{
+    if(!Cookies.get("user")){
+      navigate("/");
+      window.location.reload();
+    }
+  },[]);
 
   return (
     <div className="container">
